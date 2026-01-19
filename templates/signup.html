@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Sign Up</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    </head>
+    
+<body class="centered">
+    <form method="POST" class="form">
+        <h2>Create Account</h2>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-message">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <input name="name" placeholder="Full Name" required>
+        <input name="email" type="email" placeholder="Email" required>
+
+        <input name="username" id="username" placeholder="Username" required>
+        <span id="username-status" class="status-message"></span>
+
+        <input name="age" type="number" placeholder="Age">
+        <select name="gender">
+            <option value="">Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+        </select>
+
+        <div class="password-wrapper">
+            <input type="password" id="password" name="password" placeholder="Password" required />
+            <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+        </div>
+
+        <div class="password-wrapper">
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required />
+            <i class="fas fa-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
+        </div>
+
+        <button type="submit">Sign Up</button>
+        <p>Already have an account? <a href="/login">Login here</a></p>
+    </form>
+
+    <script>
+        function togglePassword(fieldId, iconElement) {
+            const field = document.getElementById(fieldId);
+            if (field.type === "password") {
+                field.type = "text";
+                iconElement.classList.remove("fa-eye");
+                iconElement.classList.add("fa-eye-slash");
+            } else {
+                field.type = "password";
+                iconElement.classList.remove("fa-eye-slash");
+                iconElement.classList.add("fa-eye");
+            }
+        }
+
+        // Real-time username availability check
+        document.getElementById('username').addEventListener('input', function () {
+            const username = this.value;
+            if (username.length > 2) {
+                fetch('/check_username?username=' + encodeURIComponent(username))
+                    .then(res => res.json())
+                    .then(data => {
+                        const status = document.getElementById('username-status');
+                        if (data.exists) {
+                            status.textContent = "Username already taken ❌";
+                            status.style.color = "red";
+                        } else {
+                            status.textContent = "Username available ✅";
+                            status.style.color = "green";
+                        }
+                    });
+            } else {
+                document.getElementById('username-status').textContent = "";
+            }
+        });
+    </script>
+</body>
+</html>
+    

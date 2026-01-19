@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/translate.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <h2>LANGUAGE TRANSLATOR</h2>
+        <a href="/history">HISTORY</a>
+        <a href="/logout">LOGOUT    </a>
+    </div>
+
+    <div class="translate-box">
+        <form method="POST">
+            <textarea name="text" placeholder="Enter text to translate..." required>{{ original }}</textarea>
+
+            <div class="options">
+                <label for="from_lang">From:</label>
+                <select name="from_lang" id="from_lang">
+                    <option value="auto">Auto Detect</option>
+                    {% for code, name in languages.items() %}
+                        <option value="{{ code }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="lang">To:</label>
+                <select name="lang" id="lang" required>
+                    {% for code, name in languages.items() %}
+                        <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit">Translate</button>
+        </form>
+
+        {% if translated %}
+            <div class="output-box">
+                <h3>Translated Text:</h3>
+                <p>{{ translated }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

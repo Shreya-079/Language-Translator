@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translation History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <h2>TRANSLATION HISTORY</h2>
+        <a href="/translate">BACK</a>
+        <a href="/logout">LOGOUT</a>
+    </div>
+
+    <div class="history-box">
+        {% if history %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Text</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Translated</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history %}
+                        <tr>
+                            <td>{{ item.original_text }}</td>
+                            <td>{{ item.from }}</td>
+                            <td>{{ item.to }}</td>
+                            <td>{{ item.translated_text }}</td>
+                            <td>{{ item.time }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No history found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
